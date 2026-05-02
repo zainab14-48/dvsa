@@ -33,7 +33,7 @@ The Lambda execution role includes broad wildcard permissions instead of minimal
 Screenshots included in `/evidence` folder:
 - CloudWatch logs showing AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN  
 - IAM role with wildcard permissions  
-- Successful DynamoDB scan  
+- CLI evidence 
 - S3 trigger evidence  
 
 ---
