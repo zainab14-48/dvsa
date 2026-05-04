@@ -2,6 +2,7 @@ import json
 import boto3
 import os
 
+
 # status list
 # -----------
 # 100: open
@@ -28,29 +29,12 @@ def lambda_handler(event, context):
         "userId": userId
     }
 
-    response = table.get_item(
-        Key=key,
-        AttributesToGet=["orderStatus"]
-    )
-
-    if "Item" not in response:
-        return {"status": "err", "msg": "could not find order"}
-
-    current_status = int(response["Item"]["orderStatus"])
-
-    # FIX 1: Block update after payment
-    if current_status >= 120:
-        return {"status": "err", "msg": "order already paid"}
-
     try:
-        #  FIX 2(race condition fix)
         response = table.update_item(
             Key=key,
             UpdateExpression="SET itemList = :itemList",
-            ConditionExpression="orderStatus < :paid",
             ExpressionAttributeValues={
-                ":itemList": itemList,
-                ":paid": 120
+                ":itemList": itemList
             }
         )
 
@@ -63,6 +47,6 @@ def lambda_handler(event, context):
         print("Update error:", str(e))
         return {
             "status": "err",
-            "msg": "order could not be updated; it may already be paid or locked",
+            "msg": "order could not be updated",
             "error": str(e)
         }
